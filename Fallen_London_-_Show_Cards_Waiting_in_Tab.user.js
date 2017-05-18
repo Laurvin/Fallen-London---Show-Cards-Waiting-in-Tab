@@ -5,7 +5,7 @@
 // @description Shows the Cards Waiting text displayed under the Deck in the page title/tab instead of the default "Fallen London!".
 // @version 1.1
 // @icon http://i.imgur.com/XYzKXzK.png
-// @downloadURL xxx
+// @downloadURL https://github.com/Laurvin/Fallen-London---Show-Cards-Waiting-in-Tab/raw/master/Fallen_London_-_Show_Cards_Waiting_in_Tab.user.js
 // @include http://fallenlondon.storynexus.com/Gap/*
 // @grant none
 // @run-at document-idle
