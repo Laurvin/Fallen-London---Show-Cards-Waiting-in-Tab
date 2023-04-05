@@ -39,6 +39,6 @@
     // Update the page title once when the page has loaded.
     updateTitle();
 
-    // Check for updates to the card count every 10 seconds.
-    titleIntervalId = setInterval(updateTitle, 10000);
+    // Check for updates to the card count every 20 seconds.
+    titleIntervalId = setInterval(updateTitle, 20000);
 })();
