@@ -3,29 +3,42 @@
 // @namespace Fallen London - Show Cards Waiting in Tab
 // @author Laurvin
 // @description Shows the number of cards waiting in the page title/tab instead of the default: "Fallen London".
-// @version 2.1.1
+// @version 3.0
 // @icon http://i.imgur.com/XYzKXzK.png
 // @downloadURL https://github.com/Laurvin/Fallen-London---Show-Cards-Waiting-in-Tab/raw/master/Fallen_London_-_Show_Cards_Waiting_in_Tab.user.js
 // @updateURL https://github.com/Laurvin/Fallen-London---Show-Cards-Waiting-in-Tab/raw/master/Fallen_London_-_Show_Cards_Waiting_in_Tab.user.js
-// @match https://fallenlondon.com/
-// @match https://www.fallenlondon.com/
+// @match https://fallenlondon.com/*
+// @match https://www.fallenlondon.com/*
 // @grant none
 // @run-at document-idle
 // ==/UserScript==
 
-function getCards()
-{
-  if (document.getElementsByClassName("deck-info__cards-in-deck").length != 0)
-  {
-    var Deck = document.getElementsByClassName('deck-info__cards-in-deck')[0].innerHTML.substring(6, 99).slice(0, -7);
-    
-    document.title = Deck;
-  }
-  else
-  {
-    document.title = "No deck found!";
-  }
-  setTimeout(getCards, 30 * 1000); // 30 seconds
-}
+(function() {
+    'use strict';
 
-setTimeout(getCards, 30 * 1000);
+    let currentCardCount = -1;
+    let titleIntervalId = null;
+
+    function updateTitle()
+    {
+        const cardCountSpan = document.querySelector(".deck-info span");
+        if (cardCountSpan)
+        {
+            const cardCount = cardCountSpan.innerText;
+            if (cardCount !== currentCardCount) {
+                currentCardCount = cardCount;
+            }
+        }
+        else
+        {
+            currentCardCount = "No deck found!";
+        }
+        document.title = `${currentCardCount}`;
+    }
+
+    // Update the page title once when the page has loaded.
+    updateTitle();
+
+    // Check for updates to the card count every 10 seconds.
+    titleIntervalId = setInterval(updateTitle, 10000);
+})();
