@@ -3,7 +3,7 @@
 // @namespace Fallen London - Show Cards Waiting in Tab
 // @author Laurvin
 // @description Shows the number of cards waiting in the page title/tab instead of the default: "Fallen London".
-// @version 3.1
+// @version 3.5
 // @icon http://i.imgur.com/XYzKXzK.png
 // @downloadURL https://github.com/Laurvin/Fallen-London---Show-Cards-Waiting-in-Tab/raw/master/Fallen_London_-_Show_Cards_Waiting_in_Tab.user.js
 // @updateURL https://github.com/Laurvin/Fallen-London---Show-Cards-Waiting-in-Tab/raw/master/Fallen_London_-_Show_Cards_Waiting_in_Tab.user.js
@@ -20,15 +20,40 @@
     let currentActions = -1;
     let titleIntervalId = null;
 
-    function updateTitle()
-    {
-        const cardCountSpan = document.querySelector(".deck-info span");
-        if (cardCountSpan)
+    function updateTitle() {
+        const cardSpan = document.querySelector(".deck-info__cards-in-deck span[aria-label]");
+
+        if (cardSpan)
         {
-            const cardCount = cardCountSpan.innerText;
-            if (cardCount !== currentCardCount)
+            const label = cardSpan.getAttribute("aria-label");
+            let n = 0;
+
+            if (label === "No cards waiting.")
             {
-                currentCardCount = cardCount;
+                n = 0;
+            }
+            else if (label === "No draw limit.")
+            {
+                n = "∞";
+            }
+            else
+            {
+                const match = label.match(/\d+/);
+                if (match)
+                {
+                    n = match[0];
+                }
+            }
+
+            let cardString = n + " cards";
+            if (n == 10)
+            {
+                cardString += "!!";
+            }
+
+            if (cardString !== currentCardCount)
+            {
+                currentCardCount = cardString;
             }
         }
         else
@@ -36,15 +61,20 @@
             currentCardCount = "No deck found!";
         }
 
-        const ActionsDiv = document.querySelector(".item__value"); // Needs Actions to be in the first div for this to work.
+        const ActionsDiv = document.querySelector(".item__value");
+
         if (ActionsDiv)
         {
-            const Actions = ActionsDiv.innerText;
+            let Actions = ActionsDiv.innerText;
+
             if (Actions !== currentActions)
             {
                 currentActions = Actions;
             }
-            if (currentActions == "40/40") { currentActions = "!!" + currentActions + "!!"; }
+            if (currentActions == "40/40")
+            {
+                currentActions = "!!" + currentActions + "!!";
+            }
         }
         else
         {
@@ -55,9 +85,7 @@
         document.title = Title;
     }
 
-    // Update the page title once when the page has loaded.
     updateTitle();
 
-    // Check for updates to the card count every 20 seconds.
     titleIntervalId = setInterval(updateTitle, 20000);
 })();
