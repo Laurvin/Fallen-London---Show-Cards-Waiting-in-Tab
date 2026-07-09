@@ -3,7 +3,7 @@
 // @namespace Fallen London - Show Cards Waiting in Tab
 // @author Laurvin
 // @description Shows the number of cards waiting in the page title/tab instead of the default: "Fallen London".
-// @version 3.5
+// @version 3.6
 // @icon http://i.imgur.com/XYzKXzK.png
 // @downloadURL https://github.com/Laurvin/Fallen-London---Show-Cards-Waiting-in-Tab/raw/master/Fallen_London_-_Show_Cards_Waiting_in_Tab.user.js
 // @updateURL https://github.com/Laurvin/Fallen-London---Show-Cards-Waiting-in-Tab/raw/master/Fallen_London_-_Show_Cards_Waiting_in_Tab.user.js
@@ -21,63 +21,48 @@
     let titleIntervalId = null;
 
     function updateTitle() {
-        const cardSpan = document.querySelector(".deck-info__cards-in-deck span[aria-label]");
+        const cardSpan = document.querySelector(".deck-info__cards-in-deck span");
 
-        if (cardSpan)
-        {
-            const label = cardSpan.getAttribute("aria-label");
+        if (cardSpan) {
+            const ariaLabel = cardSpan.getAttribute("aria-label");
+            const textToParse = ariaLabel ? ariaLabel : cardSpan.innerText.trim();
             let n = 0;
 
-            if (label === "No cards waiting.")
-            {
+            if (textToParse === "No cards waiting.") {
                 n = 0;
-            }
-            else if (label === "No draw limit.")
-            {
+            } else if (textToParse === "No draw limit.") {
                 n = "∞";
-            }
-            else
-            {
-                const match = label.match(/\d+/);
-                if (match)
-                {
+            } else {
+                const match = textToParse.match(/\d+/);
+                if (match) {
                     n = match[0];
                 }
             }
 
             let cardString = n + " cards";
-            if (n == 10)
-            {
+            if (n == 10) {
                 cardString += "!!";
             }
 
-            if (cardString !== currentCardCount)
-            {
+            if (cardString !== currentCardCount) {
                 currentCardCount = cardString;
             }
-        }
-        else
-        {
+        } else {
             currentCardCount = "No deck found!";
         }
 
         const ActionsDiv = document.querySelector(".item__value");
 
-        if (ActionsDiv)
-        {
+        if (ActionsDiv) {
             let Actions = ActionsDiv.innerText;
 
-            if (Actions !== currentActions)
-            {
+            if (Actions !== currentActions) {
                 currentActions = Actions;
             }
-            if (currentActions == "40/40")
-            {
+            if (currentActions == "40/40") {
                 currentActions = "!!" + currentActions + "!!";
             }
-        }
-        else
-        {
+        } else {
             currentActions = "!";
         }
 
